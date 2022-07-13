@@ -1,0 +1,31 @@
+{
+  "name": "unified-form",
+  "version": "0.2.0",
+  "description": "Unified Form library with dynamic element addition",
+  "main": "mod.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "javascript",
+    "network",
+    "api",
+    "unify"
+  ],
+  "author": "Yoones Khoshghadam",
+  "homepage": "https://github.com/yooneskh/unified-network",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yooneskh/unified-network.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yooneskh/unified-network/issues"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "vue": "3.2.37"
+  },
+  "dependencies": {
+    "unified-mongo-filter": "0.3.0"
+  }
+}
