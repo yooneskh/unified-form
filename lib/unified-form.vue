@@ -15,6 +15,8 @@ const emit = defineEmits([
 ]);
 
 
+/* fields */
+
 import { getRegisteredElements, getRegisteredTransformers } from '../mod';
 import { matches } from 'unified-mongo-filter';
 
@@ -46,11 +48,11 @@ const transformedFields = computed(() => {
 
 });
 
-const filteredFields = computed(() => {
-  return transformedFields.value.filter(field =>
+const filteredFields = computed(() =>
+  transformedFields.value.filter(field =>
     !field.vIf || matches(field.vIf, props.target)
-  );
-});
+  )
+);
 
 const rowedFields = computed(() => {
 

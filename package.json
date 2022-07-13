@@ -1,25 +1,26 @@
 {
   "name": "unified-form",
   "version": "0.2.0",
-  "description": "Unified Form library with dynamic element addition",
+  "description": "Unified Form library with dynamic element addition for Vue.js",
   "main": "mod.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "javascript",
-    "network",
-    "api",
-    "unify"
+    "vue",
+    "vue.js",
+    "form",
+    "unified"
   ],
   "author": "Yoones Khoshghadam",
-  "homepage": "https://github.com/yooneskh/unified-network",
+  "homepage": "https://github.com/yooneskh/unified-form",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yooneskh/unified-network.git"
+    "url": "git+https://github.com/yooneskh/unified-form.git"
   },
   "bugs": {
-    "url": "https://github.com/yooneskh/unified-network/issues"
+    "url": "https://github.com/yooneskh/unified-form/issues"
   },
   "license": "ISC",
   "devDependencies": {

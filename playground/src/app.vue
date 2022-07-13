@@ -19,7 +19,7 @@ const validations = ref({});
 
     <unified-form
       :target="target"
-      v-model:validations="validations"
+      @update:validations="validations = $event"
       :fields="[
         {
           key: 'firstName', identifier: 'text', label: 'First Name', width: 6,
