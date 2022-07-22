@@ -27,7 +27,7 @@
     "vue": "~3.0"
   },
   "dependencies": {
-    "unified-mongo-filter": "0.3.0"
+    "unified-mongo-filter": "0.3.1"
   },
   "files": [
     "mod.js",
