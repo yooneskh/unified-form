@@ -8,22 +8,22 @@
   },
   "keywords": [
     "javascript",
-    "network",
-    "api",
-    "unify"
+    "vue",
+    "form",
+    "unified"
   ],
   "author": "Yoones Khoshghadam",
-  "homepage": "https://github.com/yooneskh/unified-network",
+  "homepage": "https://github.com/yooneskh/unified-form",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yooneskh/unified-network.git"
+    "url": "git+https://github.com/yooneskh/unified-form.git"
   },
   "bugs": {
-    "url": "https://github.com/yooneskh/unified-network/issues"
+    "url": "https://github.com/yooneskh/unified-form/issues"
   },
   "license": "ISC",
-  "devDependencies": {
-    "vue": "3.2.37"
+  "peerDependencies": {
+    "vue": "~3.0"
   },
   "dependencies": {
     "unified-mongo-filter": "0.3.0"
