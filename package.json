@@ -28,5 +28,9 @@
   },
   "dependencies": {
     "unified-mongo-filter": "0.3.0"
-  }
+  },
+  "files": [
+    "mod.js",
+    "lib/**/*"
+  ]
 }
