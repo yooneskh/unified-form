@@ -2,11 +2,10 @@ import { createApp, defineAsyncComponent } from 'vue';
 const app = createApp(App);
 
 
+app.component('unified-form', defineAsyncComponent(() => import('../../mod')));
+
+
 import { registerFormElement, registerTransformer } from '../../mod';
-
-
-app.component('unified-form', defineAsyncComponent(() => import('../../lib/unified-form.vue')));
-
 
 import ElementText from './components/element-text.vue';
 

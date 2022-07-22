@@ -1,7 +1,7 @@
 {
   "name": "unified-form",
   "version": "0.2.1",
-  "description": "Unified Form library with dynamic element addition",
+  "description": "Unified Form library with dynamic element addition for Vue.js",
   "main": "mod.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,6 +9,7 @@
   "keywords": [
     "javascript",
     "vue",
+    "vue.js",
     "form",
     "unified"
   ],

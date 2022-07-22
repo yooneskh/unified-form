@@ -1,5 +1,5 @@
 export {
-  default as UnifiedForm
+  default as default
 } from './lib/unified-form.vue';
 
 export {
