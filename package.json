@@ -1,6 +1,6 @@
 {
   "name": "unified-form",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Unified Form library with dynamic element addition for Vue.js",
   "main": "mod.js",
   "scripts": {
