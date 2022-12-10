@@ -113,15 +113,24 @@ const registeredElements = computed(() =>
 );
 
 
-function handleElementInput(field, value) {
+function handleElementInput(field, input, variant) {
 
   const element = registeredElements.value.find(it => it.identifier === field.identifier);
 
   if (element.valueProcessor) {
-    value = element.valueProcessor(value, field);
+    input = element.valueProcessor(input, field);
   }
 
-  props.target[field.key] = value;
+
+  if (field.variants) {
+    input = {
+      ...(props.target?.[field.key] ?? {}),
+      [variant]: input,
+    };
+  }
+
+
+  props.target[field.key] = input;
 
 }
 
@@ -194,7 +203,7 @@ const gap = ref('12px');
             :is="registeredElements.find(it => it.identifier === field.identifier).component"
             :field="field"
             :value="props.target[field.key]"
-            @input="handleElementInput(field, $event)"
+            @input="(input, variant) => handleElementInput(field, input, variant)"
             :success="validations[field.key]?.every(it => it === true)"
             :error="validations[field.key]?.some(it => typeof it === 'string' || it === false)"
             :messages="validations[field.key]?.filter(it => typeof it === 'string')"
