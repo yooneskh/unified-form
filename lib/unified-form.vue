@@ -17,7 +17,7 @@ const emit = defineEmits([
 
 /* fields */
 
-import { getRegisteredElements, getRegisteredTransformers } from '../mod';
+import { getRegisteredElements, getRegisteredTransformers } from './unified-form-registry';
 import { matches } from 'unified-mongo-filter';
 
 const transformedFields = computed(() => {
