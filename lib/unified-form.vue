@@ -57,36 +57,43 @@ const filteredFields = computed(() =>
 const rowedFields = computed(() => {
 
   const result = [];
-  const fields = [...filteredFields.value];
-
 
   let currentRow = [];
   let currentRowLength = 0;
 
-  while (fields.length > 0) {
-
-    const field = fields.shift();
+  for (const field of filteredFields.value) {
 
     if (!field.width || field.width + currentRowLength > 12) {
 
-      if (currentRowLength < 12) {
-        currentRow.push({
-          identifier: 'empty',
-          width: 12 - currentRowLength
-        });
+      if (currentRowLength > 0) {
+
+        if (currentRowLength < 12) {
+          currentRow.push({
+            identifier: 'empty',
+            width: 12 - currentRowLength,
+          });
+        }
+
+        result.push(currentRow);
+
+        currentRow = [];
+        currentRowLength = 0;
+
       }
 
-      result.push(currentRow);
-
-      currentRow = [field];
-      currentRowLength = field.width ?? 12;
+      if (!field.width) {
+        result.push([field]);
+      }
+      else {
+        currentRow = [field];
+        currentRowLength = field.width;
+      }
 
     }
     else {
       currentRow.push(field);
       currentRowLength += field.width;
     }
-
   }
 
   if (currentRowLength > 0) {

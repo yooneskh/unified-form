@@ -22,7 +22,7 @@ const validations = ref({});
       @update:validations="validations = $event"
       :fields="[
         {
-          key: 'firstName', identifier: 'text', label: 'First Name', width: 6,
+          key: 'firstName', identifier: 'text', label: 'First Name',
           rules: [
             v => v === 'Hello' || 'First name must be hello!',
             {
@@ -35,7 +35,7 @@ const validations = ref({});
           key: 'lastName', identifier: 'text', label: 'Last Name', width: 6,
         },
         {
-          key: 'email', identifier: 'text', label: 'Email', width: 6,
+          key: 'email', identifier: 'text', label: 'Email', width: 5,
         },
         {
           key: 'age', identifier: 'number', label: 'Age', width: 6,
