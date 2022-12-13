@@ -12,6 +12,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'update:validations',
+  'update:isValid',
 ]);
 
 
@@ -185,7 +186,7 @@ const validations = computed(() => {
 
 });
 
-watch(validations,() => (
+watch(validations, () => (
   emit('update:validations', validations.value)
 ), { immediate: true });
 
