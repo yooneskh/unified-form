@@ -18,22 +18,40 @@ const emit = defineEmits([
 
 /* fields */
 
+const memoizedFields = ref([]);
+
+const fields = computed(() => (
+  props.fields ?? []
+));
+
+
+watch(fields, () => {
+  if (JSON.stringify(fields.value) !== JSON.stringify(memoizedFields.value)) {
+    memoizedFields.value = fields.value;
+  }
+}, { immediate: true });
+
+
 import { getRegisteredElements, getRegisteredTransformers } from './unified-form-registry';
 import { matches } from 'unified-mongo-filter';
 
+const transformers = computed(() => (
+  getRegisteredTransformers()
+));
+
+
 const transformedFields = computed(() => {
 
-  const transformers = getRegisteredTransformers();
   const result = [];
 
 
-  for (let i = 0; i < props.fields?.length; i++) {
+  for (let i = 0; i < memoizedFields.value.length; i++) {
 
-    let field = props.fields[i];
+    let field = memoizedFields.value[i];
 
     while (true) {
 
-      const transformer = transformers.find(it => it.criterion(field));
+      const transformer = transformers.value.find(it => it.criterion(field));
       if (!transformer) break;
 
       field = transformer.transducer(field);
@@ -193,7 +211,7 @@ watch(validations, () => (
 
 const isValid = computed(() => (
   Object.keys(validations.value).every(key => (
-    validations.value[key] === true
+    validations.value[key].every(it => it  === true)
   ))
 ));
 
