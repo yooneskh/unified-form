@@ -185,7 +185,20 @@ const validations = computed(() => {
 
 });
 
-watch(validations, () => emit('update:validations', validations.value));
+watch(validations,() => (
+  emit('update:validations', validations.value)
+), { immediate: true });
+
+
+const isValid = computed(() => (
+  Object.keys(validations.value).every(key => (
+    validations.value[key] === true
+  ))
+));
+
+watch(isValid, () => (
+  emit('update:isValid', isValid.value)
+), { immediate: true });
 
 
 /* template specific */
