@@ -1,7 +1,7 @@
 <script setup>
 
-
 import { ref } from 'vue';
+
 
 const target = ref({
   firstName: 'Yoones',
@@ -10,6 +10,7 @@ const target = ref({
 });
 
 const validations = ref({});
+const isValid = ref(true);
 
 </script>
 
@@ -20,6 +21,7 @@ const validations = ref({});
     <unified-form
       :target="target"
       @update:validations="validations = $event"
+      @update:isValid="isValid = $event"
       :fields="[
         {
           key: 'firstName', identifier: 'text', label: 'First Name',
@@ -42,7 +44,7 @@ const validations = ref({});
           rules: [
             v => v < 18 || 'Age must be less than 19',
             v => v > 3 || 'Age must be less than 19',
-          ]
+          ],
         },
         {
           vIf: { age: { $gte: 18 } },
@@ -69,7 +71,7 @@ const validations = ref({});
     </div>
 
     <div style="margin-top: 16px;">
-      <pre>{{ validations }}</pre>
+      <pre>{{ { isValid, validations } }}</pre>
     </div>
 
   </div>
