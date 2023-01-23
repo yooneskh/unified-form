@@ -222,7 +222,6 @@ watch(isValid, () => (
 
 /* template specific */
 
-const padding = ref('12px');
 const gap = ref('12px');
 
 </script>
@@ -256,10 +255,6 @@ const gap = ref('12px');
 
 
 <style scoped>
-
-  .unified-form {
-    padding: v-bind(padding);
-  }
 
   .row {
     display: flex;
