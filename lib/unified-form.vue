@@ -167,10 +167,13 @@ const validations = computed(() => {
 
 
   for (const field of filteredFields.value) {
-    if (!field.rules || field.rules.length === 0) continue;
+
+    if (!field.rules || field.rules.length === 0) {
+      continue;
+    }
+
 
     const fieldValidationResults = [];
-
 
     for (const ruler of field.rules) {
       if (typeof ruler === 'object') {
@@ -179,6 +182,7 @@ const validations = computed(() => {
 
         if (!matched) {
           fieldValidationResults.push(ruler.message);
+          break;
         }
         else {
           fieldValidationResults.push(true);
@@ -190,6 +194,10 @@ const validations = computed(() => {
         const matchResult = ruler(props.target[field.key]);
 
         fieldValidationResults.push(matchResult);
+
+        if (!matchResult || typeof matchResult === 'string') {
+          break;
+        }
 
       }
     }
