@@ -1,6 +1,6 @@
 <script setup>
 
-import { computed, ref, watch } from 'vue';
+import { computed, ref, reactive, watch } from 'vue';
 
 
 /* interface */
@@ -8,6 +8,10 @@ import { computed, ref, watch } from 'vue';
 const props = defineProps({
   fields: Array,
   target: {},
+  validationStrategy: {
+    type: String,
+    default: 'dirty',
+  },
 });
 
 const emit = defineEmits([
@@ -139,6 +143,8 @@ const registeredElements = computed(() =>
 );
 
 
+const dirtyFields = reactive({});
+
 function handleElementInput(field, input, variant) {
 
   const element = registeredElements.value.find(it => it.identifier === field.identifier);
@@ -158,13 +164,14 @@ function handleElementInput(field, input, variant) {
 
   props.target[field.key] = input;
 
+  dirtyFields[field.key] = true;
+
 }
 
 
 const validations = computed(() => {
 
   const result = {};
-
 
   for (const field of filteredFields.value) {
 
@@ -251,8 +258,8 @@ const gap = ref('12px');
             :value="props.target[field.key]"
             @input="(input, variant) => handleElementInput(field, input, variant)"
             :success="validations[field.key]?.every(it => it === true)"
-            :error="validations[field.key]?.some(it => typeof it === 'string' || it === false)"
-            :messages="validations[field.key]?.filter(it => typeof it === 'string')"
+            :error="(props.validationStrategy !== 'dirty' || dirtyFields[field.key]) && validations[field.key]?.some(it => typeof it === 'string' || it === false)"
+            :messages="(props.validationStrategy !== 'dirty' || dirtyFields[field.key]) ? validations[field.key]?.filter(it => typeof it === 'string') : []"
           />
         </template>
 
