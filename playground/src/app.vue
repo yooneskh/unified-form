@@ -47,6 +47,12 @@ const isValid = ref(true);
           ],
         },
         {
+          key: 'previousAge', identifier: 'text', label: 'Previous Age', width: 6,
+          rules: [
+            ['is-digits', 'You must only enter digits']
+          ],
+        },
+        {
           vIf: { age: { $gte: 18 } },
           key: 'address', identifier: 'textarea', label: 'Address', width: 12,
           rows: 8,

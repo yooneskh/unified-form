@@ -36,7 +36,7 @@ watch(fields, () => {
 }, { immediate: true });
 
 
-import { getRegisteredElements, getRegisteredTransformers } from './unified-form-registry';
+import { getRegisteredElements, getRegisteredTransformers , getRegisteredValidators} from './unified-form-registry';
 import { matches } from 'unified-mongo-filter';
 
 const transformers = computed(() => (
@@ -169,6 +169,10 @@ function handleElementInput(field, input, variant) {
 }
 
 
+const validators = computed(() =>
+  getRegisteredValidators()
+);
+
 const validations = computed(() => {
 
   const result = {};
@@ -183,7 +187,61 @@ const validations = computed(() => {
     const fieldValidationResults = [];
 
     for (const ruler of field.rules) {
-      if (typeof ruler === 'object') {
+      if (typeof ruler === 'function') {
+
+        const matchResult = ruler(props.target[field.key]);
+
+        fieldValidationResults.push(matchResult);
+
+        if (!matchResult || typeof matchResult === 'string') {
+          break;
+        }
+
+      }
+      else if (typeof ruler === 'string') {
+
+        const validator = validators.value.find(it => it.key === ruler);
+
+        if (!validator) {
+          console.warn(`${ruler} validator was used but was not registered.`);
+          continue;
+        }
+
+        const matchResult = validator.validator(props.target[field.key]);
+
+        fieldValidationResults.push(matchResult);
+
+        if (!matchResult || typeof matchResult === 'string') {
+          break;
+        }
+
+      }
+      else if (Array.isArray(ruler)) {
+
+        if (ruler.length !== 2 || typeof ruler[0] !== 'string' || typeof ruler[1] !== 'string') {
+          console.warn('array rules must be two elements and both be strings. this was given', ruler);
+          break;
+        }
+
+
+        const validator = validators.value.find(it => it.key === ruler[0]);
+
+        if (!validator) {
+          console.warn(`${ruler[0]} validator was used but was not registered.`);
+          continue;
+        }
+
+        const matchResult = validator.validator(props.target[field.key]);
+
+        if (!matchResult || typeof matchResult === 'string') {
+          fieldValidationResults.push(ruler[1]);
+          break;
+        }
+
+        fieldValidationResults.push(matchResult);
+
+      }
+      else if (typeof ruler === 'object') {
 
         const matched = matches(ruler.criteria, props.target[field.key]);
 
@@ -193,17 +251,6 @@ const validations = computed(() => {
         }
         else {
           fieldValidationResults.push(true);
-        }
-
-      }
-      else if (typeof ruler === 'function') {
-
-        const matchResult = ruler(props.target[field.key]);
-
-        fieldValidationResults.push(matchResult);
-
-        if (!matchResult || typeof matchResult === 'string') {
-          break;
         }
 
       }
