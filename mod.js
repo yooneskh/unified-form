@@ -9,6 +9,9 @@ export {
   getRegisteredTransformers,
   registerValidator,
   getRegisteredValidators,
+  prependValueProcessor,
+  appendValueProcessor,
+  getRegisteredValueProcessors,
 } from './lib/unified-form-registry';
 
 

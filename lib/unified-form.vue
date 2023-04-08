@@ -36,7 +36,7 @@ watch(fields, () => {
 }, { immediate: true });
 
 
-import { getRegisteredElements, getRegisteredTransformers , getRegisteredValidators} from './unified-form-registry';
+import { getRegisteredElements, getRegisteredTransformers , getRegisteredValidators, getRegisteredValueProcessors } from './unified-form-registry';
 import { matches } from 'unified-mongo-filter';
 
 const transformers = computed(() => (
@@ -142,6 +142,10 @@ const registeredElements = computed(() =>
   getRegisteredElements()
 );
 
+const registeredValueProcessors = computed(() =>
+  getRegisteredValueProcessors()
+);
+
 
 const dirtyFields = reactive({});
 
@@ -149,8 +153,10 @@ function handleElementInput(field, input, variant) {
 
   const element = registeredElements.value.find(it => it.identifier === field.identifier);
 
-  if (element.valueProcessor) {
-    input = element.valueProcessor(input, field);
+  for (const item of registeredValueProcessors.value) {
+    if (item.criterion(element, input)) {
+      input = item.processor(input, field);
+    }
   }
 
 
