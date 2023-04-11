@@ -1,6 +1,6 @@
 <script setup>
 
-import { computed, ref, reactive, watch } from 'vue';
+import { computed, ref, reactive, watch, inject } from 'vue';
 
 
 /* interface */
@@ -18,6 +18,55 @@ const emit = defineEmits([
   'update:validations',
   'update:isValid',
 ]);
+
+
+/* breakpoints */
+
+import { useWindowSize } from './use-window-size';
+const { width: windowWidth } = useWindowSize();
+
+
+const globalBreakpoints = inject('globalBreakpoints');
+
+const breakpoints = computed(() => (globalBreakpoints?.value ?? globalBreakpoints ?? {
+  'xs': 600,
+  'sm': 960,
+  'md': 1280,
+  'lg': 1920,
+  'xl': 2560,
+}));
+
+
+const currentBreakpoint = computed(() => {
+
+  for (const key in breakpoints.value) {
+    if (windowWidth.value < breakpoints.value[key]) {
+      return key;
+    }
+  }
+
+  return 'xxl';
+
+});
+
+
+function getColsFor(field) {
+
+  if (field.identifier === 'empty') {
+    return field.width;
+  }
+
+  if (field.preemptWidth) {
+    return field.preemptWidth;
+  }
+
+  if (currentBreakpoint.value === 'xs') {
+    return field.width?.xs ?? 12;
+  }
+
+  return field.width?.[currentBreakpoint.value] ?? field.width ?? 12;
+
+}
 
 
 /* fields */
@@ -86,38 +135,31 @@ const rowedFields = computed(() => {
 
   for (const field of filteredFields.value) {
 
-    if (!field.width || field.width + currentRowLength > 12) {
+    const fieldWidth = getColsFor(field);
 
-      if (currentRowLength > 0) {
 
-        if (currentRowLength < 12) {
-          currentRow.push({
-            identifier: 'empty',
-            width: 12 - currentRowLength,
-          });
-        }
-
-        result.push(currentRow);
-
-        currentRow = [];
-        currentRowLength = 0;
-
-      }
-
-      if (!field.width) {
-        result.push([field]);
-      }
-      else {
-        currentRow = [field];
-        currentRowLength = field.width;
-      }
-
-    }
-    else {
+    if (currentRowLength + fieldWidth <= 12) {
       currentRow.push(field);
-      currentRowLength += field.width;
+      currentRowLength += fieldWidth;
+      continue;
     }
+
+
+    if (currentRowLength < 12 && currentRowLength > 0) {
+      currentRow.push({
+        identifier: 'empty',
+        width: 12 - currentRowLength,
+      });
+    }
+
+
+    result.push(currentRow);
+
+    currentRow = [];
+    currentRowLength = 0;
+
   }
+
 
   if (currentRowLength > 0) {
 
@@ -288,7 +330,7 @@ watch(isValid, () => (
 ), { immediate: true });
 
 
-/* template specific */
+/* template */
 
 const gap = ref('12px');
 
@@ -302,7 +344,7 @@ const gap = ref('12px');
       class="row">
       <div
         v-for="field of fieldRow" :key="field.key"
-        :class="[ `col-${field.width ?? 12}` ]">
+        :class="[ `col-${getColsFor(field)}` ]">
 
         <template v-if="field.identifier !== 'empty'">
           <component
