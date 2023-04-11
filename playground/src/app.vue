@@ -37,7 +37,7 @@ const isValid = ref(true);
           key: 'lastName', identifier: 'text', label: 'Last Name', width: 6,
         },
         {
-          key: 'email', identifier: 'text', label: 'Email', width: 5,
+          key: 'email', identifier: 'text', label: 'Email', width: { sm: 8, md: 5, lg: 4, xl: 2 },
         },
         {
           key: 'age', identifier: 'number', label: 'Age', width: 6,
