@@ -155,8 +155,8 @@ const rowedFields = computed(() => {
 
     result.push(currentRow);
 
-    currentRow = [];
-    currentRowLength = 0;
+    currentRow = [field];
+    currentRowLength = fieldWidth;
 
   }
 

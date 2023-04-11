@@ -37,13 +37,13 @@ const isValid = ref(true);
           key: 'lastName', identifier: 'text', label: 'Last Name', width: 6,
         },
         {
-          key: 'email', identifier: 'text', label: 'Email', width: { sm: 8, md: 5, lg: 4, xl: 2 },
+          key: 'email', identifier: 'text', label: 'Email', width: { sm: 8, md: 6, lg: 4, xl: 2 },
         },
         {
           key: 'age', identifier: 'number', label: 'Age', width: 6,
           rules: [
-            v => v < 18 || 'Age must be less than 19',
-            v => v > 3 || 'Age must be less than 19',
+            v => v < 19 || 'Age must be less than 19',
+            v => v > 3 || 'Age must be more than 3',
           ],
         },
         {
