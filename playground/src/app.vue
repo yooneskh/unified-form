@@ -24,20 +24,20 @@ const isValid = ref(true);
       @update:isValid="isValid = $event"
       :fields="[
         {
-          key: 'firstName', identifier: 'text', label: 'First Name',
+          key: 'firstName', identifier: 'text', label: 'First Name', preemptWidth: 6,
           rules: [
-            v => v === 'Hello' || 'First name must be hello!',
             {
               criteria: { $ne: 'Bye' },
               message: 'First name must not be Bye!'
             },
+            v => v === 'Hello' || 'First name must be hello!',
           ]
         },
         {
-          key: 'lastName', identifier: 'text', label: 'Last Name', width: 6,
+          key: 'lastName', identifier: 'text', label: 'Last Name', preemptWidth: 6,
         },
         {
-          key: 'email', identifier: 'text', label: 'Email', width: { sm: 8, md: 6, lg: 4, xl: 2 },
+          key: 'email', identifier: 'text', label: 'Email', width: 6,
         },
         {
           key: 'age', identifier: 'number', label: 'Age', width: 6,

@@ -1,6 +1,6 @@
 <script setup>
 
-import { computed, ref, reactive, watch, inject } from 'vue';
+import { computed, ref, reactive, watch, inject, toValue } from 'vue';
 
 
 /* interface */
@@ -11,6 +11,10 @@ const props = defineProps({
   validationStrategy: {
     type: String,
     default: 'dirty',
+  },
+  gap: {
+    type: [Number, String],
+    default: '12px',
   },
 });
 
@@ -25,27 +29,27 @@ const emit = defineEmits([
 import { useWindowSize } from './use-window-size';
 const { width: windowWidth } = useWindowSize();
 
-
-const globalBreakpoints = inject('globalBreakpoints');
-
-const breakpoints = computed(() => (globalBreakpoints?.value ?? globalBreakpoints ?? {
-  'xs': 600,
-  'sm': 960,
-  'md': 1280,
-  'lg': 1920,
-  'xl': 2560,
-}));
+ 
+const globalBreakpoints = inject('globalBreakpoints', {
+  'xs': 640,
+  'sm': 768,
+  'md': 1024,
+  'lg': 1280,
+  'xl': 1536,
+});
 
 
 const currentBreakpoint = computed(() => {
 
-  for (const key in breakpoints.value) {
-    if (windowWidth.value < breakpoints.value[key]) {
+  const breakpoints = toValue(globalBreakpoints);
+
+  for (const key in breakpoints) {
+    if (windowWidth.value < breakpoints[key]) {
       return key;
     }
   }
 
-  return 'xxl';
+  return '2xl';
 
 });
 
@@ -332,7 +336,10 @@ watch(isValid, () => (
 
 /* template */
 
-const gap = ref('12px');
+const gap = computed(() =>
+  !isNaN(props.gap) ? `${props.gap}px` : props.gap
+);
+
 
 </script>
 
