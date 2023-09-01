@@ -1,26 +1,26 @@
 <script setup>
 
 const props = defineProps({
-  value: {},
+  modelValue: {},
   field: {},
 });
 
 const emit = defineEmits([
-  'input',
+  'update:modelValue',
 ]);
 
 
 
 function toggleValue(value) {
 
-  if (!props.value) {
-    emit('input', [value]);
+  if (!props.modelValue) {
+    emit('update:modelValue', [value]);
   }
-  else if (props.value.includes(value)) {
-    emit('input', props.value.filter(it => it !== value));
+  else if (props.modelValue.includes(value)) {
+    emit('update:modelValue', props.modelValue.filter(it => it !== value));
   }
   else {
-    emit('input', [...props.value, value]);
+    emit('update:modelValue', [...props.modelValue, value]);
   }
 
 }
@@ -40,7 +40,7 @@ function toggleValue(value) {
 
         <input
           type="checkbox"
-          :checked="value?.includes(item.value)"
+          :checked="props.modelValue?.includes(item.value)"
         />
 
         {{ item.title }}

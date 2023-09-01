@@ -357,8 +357,8 @@ const gap = computed(() =>
           <component
             :is="registeredElements.find(it => it.identifier === field.identifier).component"
             :field="field"
-            :value="props.target[field.key]"
-            @input="(input, variant) => handleElementInput(field, input, variant)"
+            :model-value="props.target[field.key]"
+            @update:model-value="(input, variant) => handleElementInput(field, input, variant)"
             :success="validations[field.key]?.every(it => it === true)"
             :error="(props.validationStrategy !== 'dirty' || dirtyFields[field.key]) && validations[field.key]?.some(it => typeof it === 'string' || it === false)"
             :messages="(props.validationStrategy !== 'dirty' || dirtyFields[field.key]) ? validations[field.key]?.filter(it => typeof it === 'string') : []"

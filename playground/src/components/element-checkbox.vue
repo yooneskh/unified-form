@@ -3,21 +3,21 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-  value: {},
+  modelValue: {},
   field: {},
 });
 
 const emit = defineEmits([
-  'input',
+  'update:modelValue',
 ]);
 
 
 const valueProxy = computed({
   get() {
-    return props.value;
+    return props.modelValue;
   },
   set(value) {
-    emit('input', value);
+    emit('update:modelValue', value);
   }
 });
 
