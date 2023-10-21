@@ -221,6 +221,8 @@ function handleElementInput(field, input, variant) {
 }
 
 
+const internalValidations = reactive({});
+
 const validators = computed(() =>
   getRegisteredValidators()
 );
@@ -230,86 +232,91 @@ const validations = computed(() => {
   const result = {};
 
   for (const field of filteredFields.value) {
-
-    if (!field.rules || field.rules.length === 0) {
-      continue;
-    }
-
-
+    
     const fieldValidationResults = [];
 
-    for (const ruler of field.rules) {
-      if (typeof ruler === 'function') {
 
-        const matchResult = ruler(props.target[field.key]);
+    if (field.key in internalValidations) {
+      fieldValidationResults.push(internalValidations[field.key]);
+    }
 
-        fieldValidationResults.push(matchResult);
 
-        if (!matchResult || typeof matchResult === 'string') {
-          break;
+    if (field.rules?.length > 0) {
+      for (const ruler of field.rules) {
+        if (typeof ruler === 'function') {
+  
+          const matchResult = ruler(props.target[field.key]);
+  
+          fieldValidationResults.push(matchResult);
+  
+          if (!matchResult || typeof matchResult === 'string') {
+            break;
+          }
+  
         }
-
-      }
-      else if (typeof ruler === 'string') {
-
-        const validator = validators.value.find(it => it.key === ruler);
-
-        if (!validator) {
-          console.warn(`${ruler} validator was used but was not registered.`);
-          continue;
+        else if (typeof ruler === 'string') {
+  
+          const validator = validators.value.find(it => it.key === ruler);
+  
+          if (!validator) {
+            console.warn(`${ruler} validator was used but was not registered.`);
+            continue;
+          }
+  
+          const matchResult = validator.validator(props.target[field.key]);
+  
+          fieldValidationResults.push(matchResult);
+  
+          if (!matchResult || typeof matchResult === 'string') {
+            break;
+          }
+  
         }
-
-        const matchResult = validator.validator(props.target[field.key]);
-
-        fieldValidationResults.push(matchResult);
-
-        if (!matchResult || typeof matchResult === 'string') {
-          break;
+        else if (Array.isArray(ruler)) {
+  
+          if (ruler.length !== 2 || typeof ruler[0] !== 'string' || typeof ruler[1] !== 'string') {
+            console.warn('array rules must be two elements and both be strings. this was given', ruler);
+            break;
+          }
+  
+  
+          const validator = validators.value.find(it => it.key === ruler[0]);
+  
+          if (!validator) {
+            console.warn(`${ruler[0]} validator was used but was not registered.`);
+            continue;
+          }
+  
+          const matchResult = validator.validator(props.target[field.key]);
+  
+          if (!matchResult || typeof matchResult === 'string') {
+            fieldValidationResults.push(ruler[1]);
+            break;
+          }
+  
+          fieldValidationResults.push(matchResult);
+  
         }
-
-      }
-      else if (Array.isArray(ruler)) {
-
-        if (ruler.length !== 2 || typeof ruler[0] !== 'string' || typeof ruler[1] !== 'string') {
-          console.warn('array rules must be two elements and both be strings. this was given', ruler);
-          break;
+        else if (typeof ruler === 'object') {
+  
+          const matched = matches(ruler.criteria, props.target[field.key]);
+  
+          if (!matched) {
+            fieldValidationResults.push(ruler.message);
+            break;
+          }
+          else {
+            fieldValidationResults.push(true);
+          }
+  
         }
-
-
-        const validator = validators.value.find(it => it.key === ruler[0]);
-
-        if (!validator) {
-          console.warn(`${ruler[0]} validator was used but was not registered.`);
-          continue;
-        }
-
-        const matchResult = validator.validator(props.target[field.key]);
-
-        if (!matchResult || typeof matchResult === 'string') {
-          fieldValidationResults.push(ruler[1]);
-          break;
-        }
-
-        fieldValidationResults.push(matchResult);
-
-      }
-      else if (typeof ruler === 'object') {
-
-        const matched = matches(ruler.criteria, props.target[field.key]);
-
-        if (!matched) {
-          fieldValidationResults.push(ruler.message);
-          break;
-        }
-        else {
-          fieldValidationResults.push(true);
-        }
-
       }
     }
 
 
-    result[field.key] = fieldValidationResults;
+    if (fieldValidationResults.length > 0) {
+      result[field.key] = fieldValidationResults;
+    }
 
   }
 
@@ -359,6 +366,7 @@ const gap = computed(() =>
             :field="field"
             :model-value="props.target[field.key]"
             @update:model-value="(input, variant) => handleElementInput(field, input, variant)"
+            @update:is-valid="internalValidations[field.key] = $event"
             :success="validations[field.key]?.every(it => it === true)"
             :error="(props.validationStrategy !== 'dirty' || dirtyFields[field.key]) && validations[field.key]?.some(it => typeof it === 'string' || it === false)"
             :messages="(props.validationStrategy !== 'dirty' || dirtyFields[field.key]) ? validations[field.key]?.filter(it => typeof it === 'string') : []"
